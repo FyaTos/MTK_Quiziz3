@@ -1,0 +1,33 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-300 to-blue-500 p-6">
+    <div class="p-8 bg-[#a1bd92] border-[10px] border-[#eac39f] rounded-lg shadow-2xl w-full max-w-7xl relative overflow-hidden">
+         
+        <div class="absolute inset-0 bg-white opacity-10 blur-3xl"></div>
+
+        <div class="flex flex-wrap gap-10 justify-center">
+            <div *ngFor="let kotak of (data$ | async)" 
+                class="relative flex flex-col items-center justify-center w-72 h-56 rounded-xl border-4 shadow-lg transition-all cursor-pointer"
+                [ngClass]="isUnlocked(kotak.id) ? 'bg-gradient-to-b from-blue-300 to-blue-500 hover:scale-105 hover:shadow-2xl' : 'bg-gray-400 opacity-50 cursor-not-allowed'"
+                (click)="onBoxClick(kotak.id)">
+
+                <div class="absolute inset-0 rounded-xl bg-white opacity-10 blur-xl"></div>
+ 
+                <div class="text-3xl font-extrabold text-white tracking-wider uppercase flex items-center gap-2">
+                    <span class="text-yellow-400">⭐</span> {{ kotak.title }}
+                </div>
+ 
+                <div class="text-lg font-bold text-gray-200 opacity-90 mt-3 transition-opacity uppercase">
+                    {{ isUnlocked(kotak.id) ? 'Klik & Tantang Skormu!' : 'Terkunci 🚫' }}
+                </div>
+
+                <div class="absolute top-3 right-3 bg-yellow-400 text-purple-900 text-sm font-bold px-3 py-1 rounded-full shadow-md animate-pulse"
+                    *ngIf="isUnlocked(kotak.id)">
+                    +XP
+                </div>
+
+                <div class="absolute inset-0 rounded-xl border-4 border-transparent" 
+                    [ngClass]="isUnlocked(kotak.id) ? 'group-hover:border-yellow-400' : ''">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
