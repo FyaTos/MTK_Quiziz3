@@ -28,15 +28,17 @@ export class MenuQuzzMateriComponent {
     finalScore = 0;
     quizTitle = '';
     quizNotFound = false;
-    minScore = 60;  
-  
+    minScore = 10;  
+    nextQuizId: number | null = null; 
+    progress = 0; // Variabel untuk menyimpan progress kuis
+
     constructor() {
       this.route.paramMap.subscribe(params => {
         const quizId = Number(params.get('id'));
         this.loadQuestions(quizId);
       });
     }
-  
+    
     loadQuestions(quizId: number) {
       this.quizService.getData().subscribe(data => {
         const quizData = data.find(q => q.id === quizId);
@@ -49,6 +51,8 @@ export class MenuQuzzMateriComponent {
           this.finalScore = 0;
           this.userAnswers = [];
           this.quizNotFound = false;
+          this.nextQuizId = quizData.nextId || null; 
+          this.progress = 0; // Reset progress saat memulai kuis baru
           this.loadQuestion();
         } else {
           this.quizNotFound = true;
@@ -67,6 +71,7 @@ export class MenuQuzzMateriComponent {
         this.correctAnswer = quiz.correctAnswer;
         this.quizOptions = this.shuffleOptions([quiz.correctAnswer, ...quiz.incorrectAnswers]);
         this.startTimer();
+        this.updateProgress(); // Update progress setiap kali pertanyaan dimuat
       } else {
         this.quizFinished = true;
       }
@@ -102,11 +107,11 @@ export class MenuQuzzMateriComponent {
         this.finalScore += 5;
       }
    
-      if (this.finalScore >= this.minScore) {
-        this.quizFinished = true;
-        this.showCompletionMessage();
-      } else {
+      if (this.currentIndex < this.selectedQuestions.length - 1) {
         this.nextQuestion();
+      } else {
+        this.quizFinished = true;
+        this.handleQuizCompletion();
       }
     } 
   
@@ -118,12 +123,20 @@ export class MenuQuzzMateriComponent {
         this.loadQuestion();
       } else {
         this.quizFinished = true;
+        this.handleQuizCompletion();
       }
     }
   
-    showCompletionMessage() { 
-      alert('Selamat! Anda telah menyelesaikan kuis dengan skor yang cukup.'); 
-      this.router.navigate(['/quiz-result'], { queryParams: { score: this.finalScore } });
+    handleQuizCompletion() {
+      if (this.finalScore >= this.minScore) {
+        alert('Selamat! Anda lolos dengan skor ' + this.finalScore);
+        if (this.nextQuizId) {
+          alert('Kode untuk materi berikutnya: ' + this.nextQuizId);
+        }
+      } else {
+        alert('Maaf, skor Anda kurang dari 70. Silakan coba lagi!');
+        this.resetGame();
+      }
     }
   
     resetGame() {
@@ -139,5 +152,9 @@ export class MenuQuzzMateriComponent {
     goToDashboard() {
       this.router.navigate(['/pemilihan-materi']); 
     }
-  }
-  
+
+    // Fungsi untuk menghitung dan memperbarui progress
+    updateProgress() {
+      this.progress = ((this.currentIndex + 1) / this.selectedQuestions.length) * 100;
+    }
+}

@@ -1,17 +1,17 @@
-<div class="flex flex-col items-center       min-h-screen bg-gradient-to-b from-blue-300 to-blue-500 p-6">
+<div class="flex flex-col items-center min-h-screen bg-gradient-to-b from-blue-300 to-blue-500 p-6">
+ 
   <div class="w-full max-w-5xl bg-white shadow-2xl border-8 border-yellow-400 rounded-3xl overflow-hidden transform transition-all duration-300 hover:scale-105">
-      <div class="relative w-full h-0" style="padding-bottom: 56.25%;">
-          <iframe 
-              class="absolute top-0 left-0 w-full h-full rounded-2xl border-4 border-yellow-300"
-              [src]="sanitizedUrl"
-              title="YouTube video" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-          </iframe>
-      </div>
-  </div>
-
+    <div class="relative w-full h-0" style="padding-bottom: 56.25%;">
+      <iframe 
+        class="absolute top-0 left-0 w-full h-full rounded-2xl border-4 border-yellow-300"
+        [src]="sanitizedUrl"
+        title="YouTube video" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div> 
   <div class="mt-6 w-full max-w-5xl">
     <button
       *ngFor="let desc of descriptions; let i = index"
@@ -19,18 +19,18 @@
       (click)="toggleDescription(i)">
       {{ desc.buttonText }}
     </button>
-  
+
     <div
       *ngFor="let desc of descriptions; let i = index"
-      [ngClass]="{'max-h-0 overflow-hidden opacity-0': activeIndex !== i, 'max-h-screen opacity-100': activeIndex === i}"
-      class="transition-all duration-500 bg-white p-4 rounded-lg shadow-md text-gray-800 border-l-4 border-yellow-500">
-      {{ desc.text }}
+      [ngClass]="{'hidden': activeIndex !== i, 'block': activeIndex === i}"
+      class="bg-white p-4 rounded-lg shadow-md text-gray-800 border-l-4 border-yellow-500">
+      <div [innerHTML]="desc.text"></div>
     </div>
   </div>
+ 
   <button
-  class="mt-4 bg-green-500 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all duration-300 hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300"
-  [routerLink]="['/quiziz', id]">
-  Cek Kemampuan
-</button>
-
+    class="mt-4 bg-green-500 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all duration-300 hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300"
+    [routerLink]="['/quiziz', id]">
+    Cek Kemampuan
+  </button>
 </div>

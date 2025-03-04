@@ -19,19 +19,28 @@ export class MenuPemilihanMateriComponent {
   }
 
   isUnlocked(id: number): boolean {
-    if (id === 1) return true; // ID 1 selalu terbuka
-    return localStorage.getItem(`completed_${id - 1}`) === 'true'; // Hanya terbuka jika soal sebelumnya selesai
+    if (id === 1) return true;   
+    return localStorage.getItem(`unlocked_${id}`) === 'true';  
   }
 
   onBoxClick(id: number) {
     if (this.isUnlocked(id)) {
-      this.router.navigate(['/menu-soal-materi', id]);
+      this.router.navigate(['/menu-soal-materi', id]);  
     } else {
-      alert('Selesaikan soal sebelumnya untuk membuka yang ini!');
+      this.askForCode(id);
     }
   }
 
-  markAsCompleted(id: number) {
-    localStorage.setItem(`completed_${id}`, 'true'); 
+  askForCode(id: number) {
+    const correctCode = this.dataService.getCodeById(id);
+    if (!correctCode) return;  
+
+    const userCode = prompt(`Masukkan kode untuk membuka "${id}"`);
+    if (userCode === correctCode) {
+      localStorage.setItem(`unlocked_${id}`, 'true');  
+      alert('Berhasil membuka challenge!');
+    } else {
+      alert('Kode salah! Coba lagi.');
+    }
   }
 }
