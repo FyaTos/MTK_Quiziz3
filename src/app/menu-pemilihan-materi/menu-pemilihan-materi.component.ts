@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';  
 import { Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+ 
 
 @Component({
   selector: 'app-menu-pemilihan-materi',
   standalone: true,
-  imports: [CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './menu-pemilihan-materi.component.html',
   styleUrl: './menu-pemilihan-materi.component.css'
 })
@@ -15,9 +17,8 @@ export class MenuPemilihanMateriComponent {
   data$: Observable<any[]>;  
 
   constructor(private dataService: DataService, private router: Router) {
-    this.data$ = this.dataService.getData();  
+  this.data$ = this.dataService.getData();  
   }
-
   isUnlocked(id: number): boolean {
     if (id === 1) return true;   
     return localStorage.getItem(`unlocked_${id}`) === 'true';  
@@ -31,16 +32,34 @@ export class MenuPemilihanMateriComponent {
     }
   }
 
-  askForCode(id: number) {
-    const correctCode = this.dataService.getCodeById(id);
-    if (!correctCode) return;  
+ 
+  
 
-    const userCode = prompt(`Masukkan kode untuk membuka "${id}"`);
-    if (userCode === correctCode) {
-      localStorage.setItem(`unlocked_${id}`, 'true');  
-      alert('Berhasil membuka challenge!');
+  showCodeModal = false;
+  unlockTargetId: number | null = null;
+  enteredCode: string = '';
+  codeFeedback: string = '';
+  
+  askForCode(id: number) {
+    this.unlockTargetId = id;
+    this.enteredCode = '';
+    this.codeFeedback = '';
+    this.showCodeModal = true;
+  }
+  
+  submitCode() {
+    const correctCode = this.dataService.getCodeById(this.unlockTargetId!);
+    if (this.enteredCode === correctCode) {
+      localStorage.setItem(`unlocked_${this.unlockTargetId}`, 'true');
+      this.showCodeModal = false;
+      alert('🎉 Berhasil membuka challenge!');
     } else {
-      alert('Kode salah! Coba lagi.');
+      this.codeFeedback = 'Kode salah! Coba lagi.';
     }
   }
+  
+  closeCodeModal() {
+    this.showCodeModal = false;
+  }
+  
 }

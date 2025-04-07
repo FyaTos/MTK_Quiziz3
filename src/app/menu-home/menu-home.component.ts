@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
   styleUrl: './menu-home.component.css'
 })
 export class MenuHomeComponent {
-  data$: Observable<any[]>;  
+  data$: Observable<any[]>;   
   constructor(private dataService: DataService, private router: Router) {
     this.data$ = this.dataService.getData();  
   }

@@ -30,7 +30,7 @@ export class MenuQuzzMateriComponent {
     quizNotFound = false;
     minScore = 10;  
     nextQuizId: number | null = null; 
-    progress = 0; // Variabel untuk menyimpan progress kuis
+    progress = 0;  
 
     constructor() {
       this.route.paramMap.subscribe(params => {
@@ -129,14 +129,36 @@ export class MenuQuzzMateriComponent {
   
     handleQuizCompletion() {
       if (this.finalScore >= this.minScore) {
-        alert('Selamat! Anda lolos dengan skor ' + this.finalScore);
-        if (this.nextQuizId) {
-          alert('Kode untuk materi berikutnya: ' + this.nextQuizId);
-        }
+        const currentQuizId = Number(this.route.snapshot.paramMap.get('id'));
+    
+        this.quizService.getData().subscribe(data => {
+          const current = data.find(q => q.id === currentQuizId);
+          const next = data.find(q => q.id === current?.nextId); 
+    
+          this.unlockCode = next?.code || '';
+          this.showModal = true;
+    
+          if (next?.id) {
+            localStorage.setItem(`unlocked_${next.id}`, 'true');
+          }
+        });
       } else {
         alert('Maaf, skor Anda kurang dari 70. Silakan coba lagi!');
         this.resetGame();
       }
+    }
+
+    copyCodeToClipboard() {
+      if (navigator.clipboard && this.unlockCode) {
+        navigator.clipboard.writeText(this.unlockCode).then(() => {
+          alert('Kode berhasil disalin!');
+        });
+      }
+    }
+    
+
+    closeModal() {
+      this.showModal = false; 
     }
   
     resetGame() {
@@ -152,9 +174,11 @@ export class MenuQuzzMateriComponent {
     goToDashboard() {
       this.router.navigate(['/pemilihan-materi']); 
     }
-
-    // Fungsi untuk menghitung dan memperbarui progress
+ 
     updateProgress() {
       this.progress = ((this.currentIndex + 1) / this.selectedQuestions.length) * 100;
     }
+
+    showModal = false;
+    unlockCode: string = '';
 }

@@ -37,7 +37,16 @@
     <h2 class="text-4xl font-bold text-white">🎉 Quiz Selesai! 🎉</h2>
     <h3 class="text-3xl font-semibold text-yellow-400 mt-3">Total Skor: {{ finalScore }}</h3>
 
+    <div *ngIf="unlockCode" class="mt-6 p-4 bg-green-100 border border-green-500 rounded-xl">
+      <p class="text-gray-700 font-medium">🔓 Kode Materi Selanjutnya:</p>
+      <div class="mt-2 text-xl font-bold text-green-700 tracking-wider">
+        {{ unlockCode }}
+      </div>
+      <button class="mt-2 px-6 py-3 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+        (click)="copyCodeToClipboard( )"> Salin Kode</button>
+    </div>
     <div class="mt-6 w-full max-w-4xl bg-white text-gray-900 p-6 rounded-3xl shadow-xl border border-purple-700">
+      
       <h3 class="text-2xl font-bold text-gray-800 mb-4">📜 Hasil Jawaban</h3>
       <div class="space-y-4">
         <div *ngFor="let answer of userAnswers; let i = index" 
@@ -65,6 +74,28 @@
     </button>
     <button (click)="resetGame()" class="mt-6 px-6 py-3 bg-green-500 text-white text-lg font-bold rounded-2xl shadow-md transition hover:bg-green-700">
       🔄 Mulai Ulang
+    </button>
+  </div>
+</div>
+
+
+ 
+<div 
+  *ngIf="showModal" 
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
+    <h2 class="text-xl font-semibold text-green-600 mb-4">🎉 Selamat!</h2>
+    <p class="text-gray-700 mb-2">Anda lolos dengan skor <strong>{{ finalScore }}</strong></p>
+
+    <div *ngIf="unlockCode" class="mt-4 p-3 border border-green-500 bg-green-100 rounded-xl">
+      <p class="text-sm text-gray-600 mb-1">Kode untuk membuka materi selanjutnya:</p>
+      <span class="text-lg font-bold text-green-700">{{ unlockCode }}</span>
+    </div>
+
+    <button 
+      class="mt-6 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
+      (click)="closeModal()">
+      Tutup
     </button>
   </div>
 </div>

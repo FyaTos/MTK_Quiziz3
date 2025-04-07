@@ -31,3 +31,35 @@
         </div>
     </div>
 </div>
+
+ 
+<div 
+  *ngIf="showCodeModal" 
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 text-center border-2 border-blue-500">
+    <h2 class="text-2xl font-bold text-blue-600 mb-3">🔓 Buka Materi</h2>
+    <p class="text-gray-700 mb-4">Masukkan kode untuk membuka materi <strong>{{ unlockTargetId }}</strong></p>
+
+    <input 
+      [(ngModel)]="enteredCode"
+      type="text" 
+      placeholder="Masukkan kode di sini..."
+      class="w-full px-4 py-2 text-lg border-2 border-blue-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+    />
+
+    <div class="flex justify-center gap-4 mt-6">
+      <button 
+        class="bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition"
+        (click)="submitCode()">
+        ✅ Kirim
+      </button>
+      <button 
+        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-xl font-semibold hover:bg-gray-400 transition"
+        (click)="closeCodeModal()">
+        ❌ Batal
+      </button>
+    </div>
+
+    <p *ngIf="codeFeedback" class="mt-4 text-sm font-semibold text-red-500">{{ codeFeedback }}</p>
+  </div>
+</div>
